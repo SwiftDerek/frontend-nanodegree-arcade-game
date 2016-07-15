@@ -58,34 +58,44 @@ Enemy.prototype.render = function () {
 
 var Player = function () {
 
-    this.x = 203;
-    this.y = 390;
+    this.x = 202;
+    this.y = 400;
     this.sprite = 'images/char-boy.png';
 
 };
 
-Player.prototype.update = function (pixels) {
-
-
-
+Player.prototype.update = function () {
+    for (i = 0; i < allEnemies.length; i++){
+        if ((this.x >= allEnemies[i].x) && this.x <= (allEnemies[i].x + 75) && (this.y >= allEnemies[i].y) && (this.y <= allEnemies[i].y + 50)){
+            this.x = 202;
+            this.y = 400;
+        }
+    }
 };
 
 Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if (this.y < 0){
+        var message = "Congratulations!";
+        document.getElementById('message').textContent = message;
+        setTimeout(function () {
+            document.getElementById('message').textContent = "";
+        }, 2000);
+    }
 };
 
 Player.prototype.handleInput = function (direction) {
-    if (direction == 'left'){
-
+    if (direction == 'left' && this.x > 0){
+        this.x += -101;
     }
-    else if (direction == 'up'){
-
+    else if (direction == 'up' && this.y > 0){
+        this.y += -82;
     }
-    else if (direction == 'right'){
-
+    else if (direction == 'right' && this.x < 404){
+        this.x += 101;
     }
-    else {
-
+    else if (direction == 'down' && this.y < 400){
+        this.y += 82;
     }
 };
 
@@ -96,8 +106,18 @@ Player.prototype.handleInput = function (direction) {
 var allEnemies = [new Enemy(), new Enemy(), new Enemy(), new Enemy(), new Enemy()];
 var player = new Player();
 
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
 }
 
 // This listens for key presses and sends the keys to your
